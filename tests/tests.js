@@ -212,3 +212,17 @@ describe("test throwing an error in callback", function() {
 	});
 
 });
+
+describe("test remove listener", function() {
+
+	it("should not fire event", function(done) {
+
+		new events().on("eventerror", done).on("eventName", function() {
+			(1, console).log("doesn't work");
+		}).removeAllListeners("eventName").emit("eventName");
+
+		done();
+
+	});
+
+});
