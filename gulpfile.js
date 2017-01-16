@@ -14,7 +14,7 @@
 
 	const mocha = require("gulp-mocha");
 
-	require("babel-preset-es2015-node4");
+	require("babel-preset-es2015");
 
 // private
 
@@ -30,7 +30,8 @@ gulp.task("babel", function () {
 
 	return gulp.src(_libFiles)
 		.pipe(babel({
-			presets: ["es2015-node4"]
+			presets: ["es2015"],
+			plugins: ["transform-object-rest-spread"]
 		}))
 		.pipe(gulp.dest("dist"));
 
