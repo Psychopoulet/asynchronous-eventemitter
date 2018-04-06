@@ -53,6 +53,8 @@ describe("removeAllListeners", () => {
 
 		new Events().on("error", done).on("eventName", () => {
 			done(new Error("Does not work"));
+		}).on("eventName", () => {
+			done(new Error("Does not work"));
 		}).removeAllListeners("eventName").emit("eventName");
 
 		done();

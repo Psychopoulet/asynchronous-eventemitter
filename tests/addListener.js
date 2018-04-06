@@ -53,14 +53,9 @@ describe("addListener", () => {
 
 		assert.doesNotThrow(() => {
 
-			try {
 			new Events().addListener("eventName", () => {
 				// nothing to do here
 			});
-			}
-			catch (e) {
-				(0, console).log(e);
-			}
 
 		}, TypeError, "check good args throws an error");
 

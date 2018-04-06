@@ -61,25 +61,40 @@ describe("removeListener", () => {
 
 	});
 
-	// it("should not fire event", (done) => {
+	it("should not fire event", (done) => {
+
+		/**
+	 	* Test method
+	 	* @returns {void}
+	 	*/
+		function event () {
+			done(new Error("Does not work"));
+		}
+
+		new Events().on("error", done)
+			.on("eventName", event)
+			.removeListener("eventName", event)
+			.emit("eventName");
+
+		done();
+
+	});
+
+	// it("should not fire first event", (done) => {
 
 	// 	/**
 	//  	* Test method
 	//  	* @returns {void}
 	//  	*/
 	// 	function event () {
-
-	// 		(0, console).log("");
-	// 		(0, console).log("");
-	// 		(0, console).log("ICI");
-	// 		(0, console).log("");
-	// 		(0, console).log("");
-
 	// 		done(new Error("Does not work"));
 	// 	}
 
 	// 	new Events().on("error", done)
 	// 		.on("eventName", event)
+	// 		.on("eventName", () => {
+	// 			// nothing to do here
+	// 		})
 	// 		.removeListener("eventName", event)
 	// 		.emit("eventName");
 
