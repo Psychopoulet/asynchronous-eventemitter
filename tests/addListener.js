@@ -9,6 +9,14 @@
 
 describe("addListener", () => {
 
+	/**
+	* Handler with no action
+	* @returns {void}
+	*/
+	function emptyHandler () {
+		// nothing to do here
+	}
+
 	it("should check missing args", () => {
 
 		assert.throws(() => {
@@ -24,11 +32,7 @@ describe("addListener", () => {
 	it("should check wrong args", () => {
 
 		assert.throws(() => {
-
-			new Events().addListener(false, () => {
-				// nothing to do here
-			});
-
+			new Events().addListener(false, emptyHandler);
 		}, TypeError, "check wrong eventName does not throw an error");
 
 		assert.throws(() => {
@@ -40,11 +44,7 @@ describe("addListener", () => {
 	it("should check empty args", () => {
 
 		assert.throws(() => {
-
-			new Events().addListener("", () => {
-				// nothing to do here
-			});
-
+			new Events().addListener("", emptyHandler);
 		}, Error, "check empty eventName does not throw an error");
 
 	});
@@ -52,16 +52,12 @@ describe("addListener", () => {
 	it("should check good args", (done) => {
 
 		assert.doesNotThrow(() => {
-
-			new Events().addListener("eventName", () => {
-				// nothing to do here
-			});
-
+			new Events().addListener("eventName", emptyHandler);
 		}, TypeError, "check good args throws an error");
 
 		assert.doesNotThrow(() => {
 
-			new Events().addListener("eventName", () => {
+			new Events().addListener("error", emptyHandler).addListener("eventName", () => {
 				done();
 			}).emit("eventName");
 
@@ -71,7 +67,7 @@ describe("addListener", () => {
 
 	it("should check fire error event", (done) => {
 
-		new Events().addListener("eventName", () => {
+		new Events().addListener("error", emptyHandler).addListener("eventName", () => {
 			throw new Error("This is an Error");
 		}).addListener("error", (err) => {
 
@@ -88,7 +84,7 @@ describe("addListener", () => {
 
 		let count = 0;
 
-		new Events().addListener("eventName", () => {
+		new Events().addListener("error", emptyHandler).addListener("eventName", () => {
 
 			++count;
 
@@ -159,9 +155,7 @@ describe("addListener", () => {
 			new Events().addListener("error", done).addListener("eventName", (test) => {
 				assert.strictEqual(typeof test, "function", "check good listener argument generate an error");
 				done();
-			}).emit("eventName", () => {
-				// nothing to do here
-			});
+			}).emit("eventName", emptyHandler);
 
 		});
 

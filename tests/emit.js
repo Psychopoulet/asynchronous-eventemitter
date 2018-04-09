@@ -33,204 +33,64 @@ describe("emit", () => {
 
 	});
 
-});
-
-describe("on", () => {
-
-	it("should check missing args", () => {
+	it("should check no error handler", () => {
 
 		assert.throws(() => {
-			new Events().on();
-		}, ReferenceError, "check missing eventName does not throw an error");
-
-		assert.throws(() => {
-			new Events().on("eventName");
-		}, ReferenceError, "check missing listener does not throw an error");
+			new Events().emit("eventName");
+		}, Error, "check no error handler does not throw an error");
 
 	});
 
-	it("should check wrong args", () => {
+	it("should check asynchronous work", (done) => {
 
-		assert.throws(() => {
+		let firstEventFired = false;
+		let secondEventFired = false;
 
-			new Events().on(false, () => {
-				// nothing to do here
-			});
+		new Events().on("error", done).on("eventName", (test) => {
 
-		}, TypeError, "check wrong eventName does not throw an error");
+			assert.strictEqual(firstEventFired, false, "check asynchronous work generate an error");
+			assert.strictEqual(secondEventFired, false, "check asynchronous work generate an error");
 
-		assert.throws(() => {
-			new Events().on("eventName", false);
-		}, TypeError, "check wrong listener does not throw an error");
+			assert.strictEqual(typeof test, "object", "check asynchronous work generate an error");
+			assert.strictEqual(test instanceof Buffer, true, "check asynchronous work generate an error");
 
-	});
+			setTimeout(() => {
 
-	it("should check empty args", () => {
+				assert.strictEqual(firstEventFired, false, "check asynchronous work generate an error");
+				assert.strictEqual(secondEventFired, true, "check asynchronous work generate an error");
 
-		assert.throws(() => {
+				firstEventFired = true;
 
-			new Events().on("", () => {
-				// nothing to do here
-			});
-
-		}, Error, "check empty eventName does not throw an error");
-
-	});
-
-	it("should check good args", (done) => {
-
-		assert.doesNotThrow(() => {
-
-			new Events().on("eventName", () => {
-				// nothing to do here
-			});
-
-		}, TypeError, "check good args throws an error");
-
-		assert.doesNotThrow(() => {
-
-			new Events().on("eventName", () => {
 				done();
-			}).emit("eventName");
 
-		}, TypeError, "check good args throws an error");
+			}, 500);
+
+		}).on("eventName", (test) => {
+
+			assert.strictEqual(firstEventFired, false, "check asynchronous work generate an error");
+			assert.strictEqual(secondEventFired, false, "check asynchronous work generate an error");
+
+			assert.strictEqual(typeof test, "object", "check asynchronous work generate an error");
+			assert.strictEqual(test instanceof Buffer, true, "check asynchronous work generate an error");
+
+			secondEventFired = true;
+
+		}).emit("eventName", Buffer.from([]));
 
 	});
 
-	it("should check fire error event", (done) => {
+	it("should check looping error", (done) => {
 
-		new Events().on("eventName", () => {
+		new Events().on("error", () => {
 			throw new Error("This is an Error");
-		}).on("error", (err) => {
+		}).on("looperror", (err) => {
 
-			assert.strictEqual(typeof err, "object", "check fire error event does not generate a valid error");
-			assert.strictEqual(err instanceof Error, true, "check fire error event does not generate a valid error");
+			assert.strictEqual(typeof err, "object", "check looping error does not generate a valid error");
+			assert.strictEqual(err instanceof Error, true, "check looping error does not generate a valid error");
 
 			done();
 
-		}).emit("eventName");
-
-	});
-
-	it("should check fire count", (done) => {
-
-		let count = 0;
-
-		new Events().on("eventName", () => {
-
-			++count;
-
-			return 2 === count ? done() : null;
-
-		}).emit("eventName").emit("eventName");
-
-	});
-
-	describe("test listener args", () => {
-
-		it("should check listener undefined args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-				assert.strictEqual(typeof test, "undefined", "check good listener argument generate an error");
-				done();
-			}).emit("eventName");
-
-		});
-
-		it("should check listener null args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-				assert.strictEqual(test, null, "check good listener argument generate an error");
-				done();
-			}).emit("eventName", null);
-
-		});
-
-		it("should check listener boolean args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-				assert.strictEqual(test, true, "check good listener argument generate an error");
-				done();
-			}).emit("eventName", true);
-
-		});
-
-		it("should check listener string args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-				assert.strictEqual(test, "test", "check good listener argument generate an error");
-				done();
-			}).emit("eventName", "test");
-
-		});
-
-		it("should check listener integer args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-				assert.strictEqual(test, 1, "check good listener argument generate an error");
-				done();
-			}).emit("eventName", 1);
-
-		});
-
-		it("should check listener float args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-				assert.strictEqual(test, 1.1, "check good listener argument generate an error");
-				done();
-			}).emit("eventName", 1.1);
-
-		});
-
-		it("should check listener function args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-				assert.strictEqual(typeof test, "function", "check good listener argument generate an error");
-				done();
-			}).emit("eventName", () => {
-				// nothing to do here
-			});
-
-		});
-
-		it("should check listener array args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-
-				assert.strictEqual(typeof test, "object", "check good listener argument generate an error");
-				assert.strictEqual(test instanceof Array, true, "check good listener argument generate an error");
-
-				done();
-
-			}).emit("eventName", []);
-
-		});
-
-		it("should check listener object args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-
-				assert.strictEqual(typeof test, "object", "check good listener argument generate an error");
-				assert.strictEqual(test instanceof Object, true, "check good listener argument generate an error");
-
-				done();
-
-			}).emit("eventName", {});
-
-		});
-
-		it("should check listener buffer args", (done) => {
-
-			new Events().on("error", done).on("eventName", (test) => {
-
-				assert.strictEqual(typeof test, "object", "check good listener argument generate an error");
-				assert.strictEqual(test instanceof Buffer, true, "check good listener argument generate an error");
-
-				done();
-
-			}).emit("eventName", Buffer.from([]));
-
-		});
+		}).emit("error", new Error("This is an Error"));
 
 	});
 

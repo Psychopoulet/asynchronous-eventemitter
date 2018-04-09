@@ -9,6 +9,14 @@
 
 describe("prependListener", () => {
 
+	/**
+	* Handler with no action
+	* @returns {void}
+	*/
+	function emptyHandler () {
+		// nothing to do here
+	}
+
 	it("should check missing args", () => {
 
 		assert.throws(() => {
@@ -24,11 +32,7 @@ describe("prependListener", () => {
 	it("should check wrong args", () => {
 
 		assert.throws(() => {
-
-			new Events().prependListener(false, () => {
-				// nothing to do here
-			});
-
+			new Events().prependListener(false, emptyHandler);
 		}, TypeError, "check wrong eventName does not throw an error");
 
 		assert.throws(() => {
@@ -40,11 +44,7 @@ describe("prependListener", () => {
 	it("should check empty args", () => {
 
 		assert.throws(() => {
-
-			new Events().prependListener("", () => {
-				// nothing to do here
-			});
-
+			new Events().prependListener("", emptyHandler);
 		}, Error, "check empty eventName does not throw an error");
 
 	});
@@ -52,16 +52,12 @@ describe("prependListener", () => {
 	it("should check good args", (done) => {
 
 		assert.doesNotThrow(() => {
-
-			new Events().prependListener("eventName", () => {
-				// nothing to do here
-			});
-
+			new Events().prependListener("eventName", emptyHandler);
 		}, TypeError, "check good args throws an error");
 
 		assert.doesNotThrow(() => {
 
-			new Events().prependListener("eventName", () => {
+			new Events().prependListener("error", emptyHandler).prependListener("eventName", () => {
 				done();
 			}).emit("eventName");
 
@@ -71,7 +67,7 @@ describe("prependListener", () => {
 
 	it("should check fire error event", (done) => {
 
-		new Events().prependListener("eventName", () => {
+		new Events().prependListener("error", emptyHandler).prependListener("eventName", () => {
 			throw new Error("This is an Error");
 		}).prependListener("error", (err) => {
 
@@ -145,9 +141,7 @@ describe("prependListener", () => {
 			new Events().prependListener("error", done).prependListener("eventName", (test) => {
 				assert.strictEqual(typeof test, "function", "check good listener argument generate an error");
 				done();
-			}).emit("eventName", () => {
-				// nothing to do here
-			});
+			}).emit("eventName", emptyHandler);
 
 		});
 

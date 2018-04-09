@@ -9,6 +9,14 @@
 
 describe("prependOnceListener", () => {
 
+	/**
+	* Handler with no action
+	* @returns {void}
+	*/
+	function emptyHandler () {
+		// nothing to do here
+	}
+
 	it("should check missing args", () => {
 
 		assert.throws(() => {
@@ -24,11 +32,7 @@ describe("prependOnceListener", () => {
 	it("should check wrong args", () => {
 
 		assert.throws(() => {
-
-			new Events().prependOnceListener(false, () => {
-				// nothing to do here
-			});
-
+			new Events().prependOnceListener(false, emptyHandler);
 		}, TypeError, "check wrong eventName does not throw an error");
 
 		assert.throws(() => {
@@ -40,11 +44,7 @@ describe("prependOnceListener", () => {
 	it("should check empty args", () => {
 
 		assert.throws(() => {
-
-			new Events().prependOnceListener("", () => {
-				// nothing to do here
-			});
-
+			new Events().prependOnceListener("", emptyHandler);
 		}, Error, "check empty eventName does not throw an error");
 
 	});
@@ -52,16 +52,12 @@ describe("prependOnceListener", () => {
 	it("should check good args", (done) => {
 
 		assert.doesNotThrow(() => {
-
-			new Events().prependOnceListener("eventName", () => {
-				// nothing to do here
-			});
-
+			new Events().prependOnceListener("eventName", emptyHandler);
 		}, TypeError, "check good args throws an error");
 
 		assert.doesNotThrow(() => {
 
-			new Events().prependOnceListener("eventName", () => {
+			new Events().prependOnceListener("error", emptyHandler).prependOnceListener("eventName", () => {
 				done();
 			}).emit("eventName");
 
@@ -71,15 +67,15 @@ describe("prependOnceListener", () => {
 
 	it("should check fire error event", (done) => {
 
-		new Events().prependOnceListener("eventName", () => {
-			throw new Error("This is an Error");
-		}).prependOnceListener("error", (err) => {
+		new Events().prependOnceListener("error", (err) => {
 
 			assert.strictEqual(typeof err, "object", "check fire error event does not generate a valid error");
 			assert.strictEqual(err instanceof Error, true, "check fire error event does not generate a valid error");
 
 			done();
 
+		}).prependOnceListener("eventName", () => {
+			throw new Error("This is an Error");
 		}).emit("eventName");
 
 	});
@@ -88,7 +84,7 @@ describe("prependOnceListener", () => {
 
 		let count = 0;
 
-		new Events().prependOnceListener("eventName", () => {
+		new Events().prependOnceListener("error", emptyHandler).prependOnceListener("eventName", () => {
 
 			++count;
 
@@ -160,9 +156,7 @@ describe("prependOnceListener", () => {
 			new Events().prependOnceListener("error", done).prependOnceListener("eventName", (test) => {
 				assert.strictEqual(typeof test, "function", "check good listener argument generate an error");
 				done();
-			}).emit("eventName", () => {
-				// nothing to do here
-			});
+			}).emit("eventName", emptyHandler);
 
 		});
 

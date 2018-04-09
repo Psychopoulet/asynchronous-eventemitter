@@ -9,6 +9,14 @@
 
 describe("removeListener", () => {
 
+	/**
+	* Handler with no action
+	* @returns {void}
+	*/
+	function emptyHandler () {
+		// nothing to do here
+	}
+
 	it("should check missing args", () => {
 
 		assert.throws(() => {
@@ -24,11 +32,7 @@ describe("removeListener", () => {
 	it("should check wrong args", () => {
 
 		assert.throws(() => {
-
-			new Events().removeListener(false, () => {
-				// nothing to do here
-			});
-
+			new Events().removeListener(false, emptyHandler);
 		}, TypeError, "check wrong eventName does not throw an error");
 
 		assert.throws(() => {
@@ -40,11 +44,7 @@ describe("removeListener", () => {
 	it("should check empty args", () => {
 
 		assert.throws(() => {
-
-			new Events().removeListener("", () => {
-				// nothing to do here
-			});
-
+			new Events().removeListener("", emptyHandler);
 		}, Error, "check empty eventName does not throw an error");
 
 	});
@@ -52,11 +52,7 @@ describe("removeListener", () => {
 	it("should check good args", () => {
 
 		assert.doesNotThrow(() => {
-
-			new Events().removeListener("eventName", () => {
-				// nothing to do here
-			});
-
+			new Events().removeListener("eventName", emptyHandler);
 		}, TypeError, "check good args throws an error");
 
 	});
@@ -80,26 +76,24 @@ describe("removeListener", () => {
 
 	});
 
-	// it("should not fire first event", (done) => {
+	it("should not fire first event", (done) => {
 
-	// 	/**
-	//  	* Test method
-	//  	* @returns {void}
-	//  	*/
-	// 	function event () {
-	// 		done(new Error("Does not work"));
-	// 	}
+		/**
+	 	* Test method
+	 	* @returns {void}
+	 	*/
+		function event () {
+			done(new Error("Does not work"));
+		}
 
-	// 	new Events().on("error", done)
-	// 		.on("eventName", event)
-	// 		.on("eventName", () => {
-	// 			// nothing to do here
-	// 		})
-	// 		.removeListener("eventName", event)
-	// 		.emit("eventName");
+		new Events().on("error", done)
+			.on("eventName", event)
+			.on("eventName", emptyHandler)
+			.removeListener("eventName", event)
+			.emit("eventName");
 
-	// 	done();
+		done();
 
-	// });
+	});
 
 });

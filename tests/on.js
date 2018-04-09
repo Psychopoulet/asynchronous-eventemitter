@@ -9,6 +9,14 @@
 
 describe("on", () => {
 
+	/**
+	* Handler with no action
+	* @returns {void}
+	*/
+	function emptyHandler () {
+		// nothing to do here
+	}
+
 	it("should check missing args", () => {
 
 		assert.throws(() => {
@@ -24,11 +32,7 @@ describe("on", () => {
 	it("should check wrong args", () => {
 
 		assert.throws(() => {
-
-			new Events().on(false, () => {
-				// nothing to do here
-			});
-
+			new Events().on(false, emptyHandler);
 		}, TypeError, "check wrong eventName does not throw an error");
 
 		assert.throws(() => {
@@ -40,11 +44,7 @@ describe("on", () => {
 	it("should check empty args", () => {
 
 		assert.throws(() => {
-
-			new Events().on("", () => {
-				// nothing to do here
-			});
-
+			new Events().on("", emptyHandler);
 		}, Error, "check empty eventName does not throw an error");
 
 	});
@@ -52,14 +52,12 @@ describe("on", () => {
 	it("should check good args", (done) => {
 
 		assert.doesNotThrow(() => {
-			new Events().on("eventName", () => {
-				// nothing to do here
-			});
+			new Events().on("eventName", emptyHandler);
 		}, TypeError, "check good args throws an error");
 
 		assert.doesNotThrow(() => {
 
-			new Events().on("eventName", () => {
+			new Events().on("error", emptyHandler).on("eventName", () => {
 				done();
 			}).emit("eventName");
 
@@ -69,15 +67,15 @@ describe("on", () => {
 
 	it("should check fire error event", (done) => {
 
-		new Events().on("eventName", () => {
-			throw new Error("This is an Error");
-		}).on("error", (err) => {
+		new Events().on("error", (err) => {
 
 			assert.strictEqual(typeof err, "object", "check fire error event does not generate a valid error");
 			assert.strictEqual(err instanceof Error, true, "check fire error event does not generate a valid error");
 
 			done();
 
+		}).on("eventName", () => {
+			throw new Error("This is an Error");
 		}).emit("eventName");
 
 	});
@@ -86,7 +84,7 @@ describe("on", () => {
 
 		let count = 0;
 
-		new Events().on("eventName", () => {
+		new Events().on("error", emptyHandler).on("eventName", () => {
 
 			++count;
 
@@ -158,9 +156,7 @@ describe("on", () => {
 			new Events().on("error", done).on("eventName", (test) => {
 				assert.strictEqual(typeof test, "function", "check good listener argument generate an error");
 				done();
-			}).emit("eventName", () => {
-				// nothing to do here
-			});
+			}).emit("eventName", emptyHandler);
 
 		});
 
