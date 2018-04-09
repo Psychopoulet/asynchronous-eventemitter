@@ -1,18 +1,25 @@
 {
   "name": "asynchronous-eventemitter",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Asynchronous version of EventEmitter, secured by promises",
-  "main": "dist/main.js",
+  "main": "lib/main.js",
   "scripts": {
-    "start": "node dist/main.js",
-    "test": "gulp"
+    "start": "node lib/main.js",
+    "tests": "gulp tests"
   },
+  "pre-commit": [
+    "test"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/Psychopoulet/asynchronous-eventemitter.git"
   },
   "keywords": [
-    "callback", "eventemitter", "async", "event", "promises"
+    "callback",
+    "eventemitter",
+    "async",
+    "event",
+    "promises"
   ],
   "author": "Sébastien VIDAL",
   "license": "ISC",
@@ -21,19 +28,16 @@
   },
   "dependencies": {},
   "devDependencies": {
-
-    "gulp": "^3.9.1",
-    "gulp-exclude-gitignore": "^1.1.1",
-    "gulp-plumber": "^1.1.0",
-
-    "gulp-eslint": "^2.1.0",
-
-    "gulp-babel": "^6.1.2",
-    "babel-preset-es2015": "^6.18.0",
-
-    "gulp-mocha": "^3.0.1"
-
+    "gulp": "3.9.1",
+    "gulp-plumber": "1.1.0",
+    "gulp-eslint": "4.0.0",
+    "gulp-mocha": "3.0.1",
+    "gulp-istanbul": "1.1.2",
+    "gulp-coveralls": "0.1.4",
+    "pre-commit": "1.2.2"
   },
   "homepage": "https://github.com/Psychopoulet/asynchronous-eventemitter#readme",
-  "engines" : { "node" : ">=4.0.0" }
+  "engines": {
+    "node": ">=6.0.0"
+  }
 }

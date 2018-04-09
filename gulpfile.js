@@ -1,100 +1,89 @@
 
 "use strict";
 
-	// deps
+// deps
 
 	const path = require("path");
+
+	// gulp
 	const gulp = require("gulp");
 	const plumber = require("gulp-plumber");
-	const excludeGitignore = require("gulp-exclude-gitignore");
 
+	// tests
 	const eslint = require("gulp-eslint");
-
-	const babel = require("gulp-babel");
-
 	const mocha = require("gulp-mocha");
 
-	require("babel-preset-es2015");
+	// reports
+	const istanbul = require("gulp-istanbul");
+	const coveralls = require("gulp-coveralls");
 
-// private
+// consts
 
-	var _gulpFile = path.join(__dirname, "gulpfile.js");
-	var _libFiles = path.join(__dirname, "lib", "**", "*.js");
-	var _distFiles = path.join(__dirname, "dist", "**", "*.js");
-	var _unitTestsFiles = path.join(__dirname, "tests", "**", "*.js");
-	var _allJSFiles = [_gulpFile, _libFiles, _distFiles, _unitTestsFiles];
+	const ISTRAVIS = (0, process).env.TRAVIS || false;
+
+	const APP_FILES = [ path.join(__dirname, "lib", "*.js") ];
+	const UNITTESTS_FILES = [ path.join(__dirname, "tests", "**", "*.js") ];
+
+	const ALL_FILES = [ path.join(__dirname, "gulpfile.js") ]
+		.concat(APP_FILES)
+		.concat(UNITTESTS_FILES);
 
 // tasks
 
-gulp.task("babel", function () {
+	gulp.task("eslint", () => {
 
-	return gulp.src(_libFiles)
-		.pipe(babel({
-			presets: ["es2015"],
-			plugins: ["transform-object-rest-spread"]
-		}))
-		.pipe(gulp.dest("dist"));
+		return gulp.src(ALL_FILES)
+			.pipe(plumber())
+			.pipe(eslint({
+				"env": require(path.join(__dirname, "gulpfile", "eslint", "env.json")),
+				"globals": require(path.join(__dirname, "gulpfile", "eslint", "globals.json")),
+				"parserOptions": {
+					"ecmaVersion": 6
+				},
+				// http://eslint.org/docs/rules/
+				"rules": require(path.join(__dirname, "gulpfile", "eslint", "rules.json"))
+			}))
+			.pipe(eslint.format())
+			.pipe(eslint.failAfterError());
 
-});
+	});
 
-gulp.task("eslint", ["babel"], function () {
+	gulp.task("istanbul", [ "eslint" ], () => {
 
-	return gulp.src(_allJSFiles)
-		.pipe(plumber())
-		.pipe(excludeGitignore())
-		.pipe(eslint({
+		return gulp.src(APP_FILES)
+			.pipe(plumber())
+			.pipe(istanbul({ "includeUntested": true }))
+			.pipe(istanbul.hookRequire());
 
-			// http://eslint.org/docs/rules/
+	});
 
-			"rules": {
+	gulp.task("mocha", [ "istanbul" ], () => {
 
-				// strict
-				"strict": ["error", "global"],
+		return gulp.src(UNITTESTS_FILES)
+			.pipe(plumber())
+			.pipe(mocha())
+			.pipe(istanbul.writeReports())
+			.pipe(istanbul.enforceThresholds({ "thresholds": { "global": 85 } }));
 
-				// style
-				"linebreak-style": ["error", "unix"],
-				"quotes": ["error", "double"],
+	});
 
-				// strict compare
-				"eqeqeq": ["error", "always"],
+	gulp.task("coveralls", [ "mocha" ], () => {
 
-				// rules
-				"default-case": "error",
-				"no-alert": "error",
-				"no-eval": "error",
-				"no-extend-native": "error",
-				"no-implied-eval": "error",
-				"no-multi-spaces": "error"
+		return gulp.src(path.join(__dirname, "coverage", "lcov.info"))
+			.pipe(plumber())
+			.pipe(coveralls());
 
-			},
+	});
 
-			"env": {
-				"node": true, "es6": true, "mocha": true
-			},
-
-			"extends": "eslint:recommended"
-
-		}))
-		.pipe(eslint.format())
-		.pipe(eslint.failAfterError());
-
-});
-
-gulp.task("mocha", ["eslint"], function () {
-
-	return gulp.src(_unitTestsFiles)
-		.pipe(plumber())
-		.pipe(mocha({reporter: "spec"}));
-
-});
+	gulp.task("tests", [ ISTRAVIS ? "coveralls" : "mocha" ]);
 
 // watcher
 
-gulp.task("watch", function () {
-	gulp.watch(_allJSFiles, ["mocha"]);
-});
+	gulp.task("watch", () => {
+		gulp.watch(ALL_FILES, [ "eslint" ]);
+	});
 
 
 // default
 
-gulp.task("default", ["mocha"]);
+	gulp.task("default", [ "mocha" ]);
