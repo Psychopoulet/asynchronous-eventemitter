@@ -20,6 +20,18 @@ $ npm install asynchronous-eventemitter
 
 ## Examples
 
+### Native
+
+```javascript
+const Events = require("asynchronous-eventemitter");
+
+new Events().on("error", (err) => {
+  console.log(err);
+}).on("test", (arg1, arg2, arg3) => {
+  console.log(arg1, arg2, arg3);
+}).emit("test", "arg1", "arg2", "arg3").emit("test2");
+```
+
 ### Typescript
 
 ```typescript
@@ -28,18 +40,6 @@ import Events = require("asynchronous-eventemitter");
 new Events().on("error", (err: Error) => {
   console.log(err);
 }).on("test", (arg1: string, arg2: string, arg3: string) => {
-  console.log(arg1, arg2, arg3);
-}).emit("test", "arg1", "arg2", "arg3").emit("test2");
-```
-
-### Native
-
-```javascript
-const Events = require("asynchronous-eventemitter");
-
-new Events().on("error", function(err) {
-  console.log(err);
-}).on("test", function(arg1, arg2, arg3) {
   console.log(arg1, arg2, arg3);
 }).emit("test", "arg1", "arg2", "arg3").emit("test2");
 ```

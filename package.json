@@ -1,6 +1,6 @@
 {
   "name": "asynchronous-eventemitter",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Asynchronous version of EventEmitter, secured by promises",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
