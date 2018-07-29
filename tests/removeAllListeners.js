@@ -11,7 +11,7 @@ describe("removeAllListeners", () => {
 
 	it("should check missing args", () => {
 
-		assert.throws(() => {
+		assert.doesNotThrow(() => {
 			new Events().removeAllListeners();
 		}, ReferenceError, "check missing eventName does not throw an error");
 
