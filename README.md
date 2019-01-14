@@ -48,7 +48,7 @@ new Events().on("error", (err: Error) => {
 ## Tests
 
 ```bash
-$ gulp
+$ npm run-script tests
 ```
 
 ## License
