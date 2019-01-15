@@ -1,10 +1,12 @@
 # asynchronous-eventemitter
 Asynchronous version of EventEmitter, secured by promises
 
-[![Build Status](https://api.travis-ci.org/Psychopoulet/asynchronous-eventemitter.svg?branch=master)](https://travis-ci.org/Psychopoulet/asynchronous-eventemitter)
-[![Coverage Status](https://coveralls.io/repos/github/Psychopoulet/asynchronous-eventemitter/badge.svg?branch=master)](https://coveralls.io/github/Psychopoulet/asynchronous-eventemitter)
-[![Dependency Status](https://david-dm.org/Psychopoulet/asynchronous-eventemitter/status.svg)](https://david-dm.org/Psychopoulet/asynchronous-eventemitter)
-[![Dev dependency Status](https://david-dm.org/Psychopoulet/asynchronous-eventemitter/dev-status.svg)](https://david-dm.org/Psychopoulet/asynchronous-eventemitter?type=dev)
+[![Build status](https://api.travis-ci.org/Psychopoulet/asynchronous-eventemitter.svg?branch=master)](https://travis-ci.org/Psychopoulet/asynchronous-eventemitter)
+[![Coverage status](https://coveralls.io/repos/github/Psychopoulet/asynchronous-eventemitter/badge.svg?branch=master)](https://coveralls.io/github/Psychopoulet/asynchronous-eventemitter)
+[![Dependency status](https://david-dm.org/Psychopoulet/asynchronous-eventemitter/status.svg)](https://david-dm.org/Psychopoulet/asynchronous-eventemitter)
+[![Dev dependency status](https://david-dm.org/Psychopoulet/asynchronous-eventemitter/dev-status.svg)](https://david-dm.org/Psychopoulet/asynchronous-eventemitter?type=dev)
+[![Issues](https://img.shields.io/github/issues/Psychopoulet/asynchronous-eventemitter.svg)](https://github.com/Psychopoulet/asynchronous-eventemitter/issues)
+[![Pull requests](https://img.shields.io/github/issues-pr/Psychopoulet/asynchronous-eventemitter.svg)](https://github.com/Psychopoulet/asynchronous-eventemitter/pulls)
 
 ## Installation
 
