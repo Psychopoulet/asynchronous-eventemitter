@@ -1,6 +1,6 @@
 {
   "name": "asynchronous-eventemitter",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Asynchronous version of EventEmitter, secured by promises",
   "main": "lib/main.js",
   "typings": "lib/index.d.ts",
@@ -36,7 +36,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "10.12.18",
-    "check-version-modules": "1.1.0",
+    "check-version-modules": "1.1.1",
     "coveralls": "3.0.2",
     "eslint": "5.12.0",
     "mocha": "5.2.0",
